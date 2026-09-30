@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Administración - ULAN</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: #121212;
+            color: #e0e0e0;
+            font-family: Arial, sans-serif;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            border-bottom: 2px solid #333;
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+        }
+
+        h1, th { color: #00ffcc; }
+        h1 { margin: 0; }
+
+        button, .btn-volver {
+            display: inline-block;
+            background: #333;
+            color: white;
+            border: 0;
+            padding: 9px 15px;
+            text-decoration: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        button:hover, .btn-volver:hover { background: #555; }
+        button:disabled { opacity: .6; cursor: wait; }
+
+        .acciones {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .filtros {
+            display: flex;
+            align-items: end;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin: 20px 0;
+        }
+
+        .filtros label {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .filtros input, .filtros select {
+            min-height: 36px;
+            padding: 7px;
+            border: 1px solid #444;
+            border-radius: 5px;
+            background: #1e1e1e;
+            color: #e0e0e0;
+        }
+
+        .tabla-contenedor { overflow-x: auto; }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #1e1e1e;
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            vertical-align: top;
+            border-bottom: 1px solid #333;
+        }
+
+        th { background: #252525; }
+
+        .estado {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .leida { background: #2ecc71; color: #111; }
+        .no-leida { background: #ff4d4d; color: white; }
+        .boton-estado { min-width: 130px; background: #075b60; }
+
+        .botones-fila {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .botones-fila button { background: #075b60; }
+
+        #mensaje-estado {
+            min-height: 20px;
+            color: #ff8080;
+        }
+
+        dialog {
+            width: min(600px, 90vw);
+            max-height: 80vh;
+            overflow-y: auto;
+            border: 1px solid #00ffcc;
+            border-radius: 8px;
+            padding: 22px;
+            background: #1e1e1e;
+            color: #e0e0e0;
+        }
+
+        dialog::backdrop { background: rgba(0, 0, 0, .75); }
+        dialog h2 { color: #00ffcc; }
+        .detalle-mensaje { white-space: pre-wrap; overflow-wrap: anywhere; }
+
+        @media (max-width: 650px) {
+            header {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Panel de Administración - ULAN</h1>
+        <div class="acciones">
+            <a href="/" class="btn-volver">Volver al sitio</a>
+            <button id="cerrar-sesion" type="button">Cerrar sesión</button>
+        </div>
+    </header>
+
+    <main>
+        <h2>Mensajes y consultas de clientes</h2>
+        <p id="mensaje-estado" role="status" aria-live="polite"></p>
+
+        <section class="filtros" aria-label="Filtros de consultas">
+            <label for="filtro-estado">Estado
+                <select id="filtro-estado">
+                    <option value="">Todos</option>
+                    <option value="no leida">No leídas</option>
+                    <option value="leida">Leídas</option>
+                </select>
+            </label>
+            <label for="filtro-fecha">Fecha
+                <input type="date" id="filtro-fecha">
+            </label>
+            <label for="filtro-buscar">Buscar por nombre o email
+                <input type="search" id="filtro-buscar" placeholder="Buscar...">
+            </label>
+            <button id="limpiar-filtros" type="button">Limpiar filtros</button>
+        </section>
+
+        <div class="tabla-contenedor">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Fecha</th>
+                        <th>Nombre</th>
+                        <th>Email</th>
+                        <th>Asunto</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="tabla-consultas"></tbody>
+            </table>
+        </div>
+    </main>
+
+    <dialog id="dialogo-detalle">
+        <h2>Detalle de consulta</h2>
+        <div id="contenido-detalle"></div>
+        <button id="cerrar-detalle" type="button">Cerrar</button>
+    </dialog>
+
+    <script>
+        const cuerpoTabla = document.getElementById('tabla-consultas');
+        const mensajeEstado = document.getElementById('mensaje-estado');
+        const dialogo = document.getElementById('dialogo-detalle');
+        const contenidoDetalle = document.getElementById('contenido-detalle');
+
+        function agregarCampo(etiqueta, valor, clase = '') {
+            const parrafo = document.createElement('p');
+            const titulo = document.createElement('strong');
+            titulo.textContent = `${etiqueta}: `;
+            parrafo.append(titulo, document.createTextNode(valor || 'No especificado'));
+            if (clase) parrafo.className = clase;
+            contenidoDetalle.appendChild(parrafo);
+        }
+
+        async function cargarConsultas() {
+            mensajeEstado.textContent = '';
+
+            const parametros = new URLSearchParams();
+            const estado = document.getElementById('filtro-estado').value;
+            const fecha = document.getElementById('filtro-fecha').value;
+            const buscar = document.getElementById('filtro-buscar').value.trim();
+
+            if (estado) parametros.set('estado', estado);
+            if (fecha) parametros.set('fecha', fecha);
+            if (buscar) parametros.set('buscar', buscar);
+
+            try {
+                const respuesta = await fetch(`/api/consultas?${parametros}`);
+
+                if (respuesta.status === 401) {
+                    window.location.href = '/login.html';
+                    return;
+                }
+
+                const consultas = await respuesta.json();
+
+                if (!respuesta.ok) {
+                    throw new Error(consultas.error || 'No se pudieron cargar las consultas.');
+                }
+
+                cuerpoTabla.replaceChildren();
+
+                if (consultas.length === 0) {
+                    const fila = cuerpoTabla.insertRow();
+                    const celda = fila.insertCell();
+                    celda.colSpan = 6;
+                    celda.textContent = 'No hay consultas para esos filtros.';
+                    return;
+                }
+
+                consultas.forEach(consulta => {
+                    const fila = cuerpoTabla.insertRow();
+
+                    const fecha = consulta.fecha
+                        ? new Date(consulta.fecha).toLocaleString()
+                        : '';
+
+                    [fecha, consulta.nombre, consulta.email, consulta.asunto]
+                        .forEach(valor => {
+                            fila.insertCell().textContent = valor ?? '';
+                        });
+
+                    const leida = consulta.estado === 'leida';
+                    const celdaEstado = fila.insertCell();
+                    const etiqueta = document.createElement('span');
+                    etiqueta.className = `estado ${leida ? 'leida' : 'no-leida'}`;
+                    etiqueta.textContent = leida ? 'Leída' : 'No leída';
+                    celdaEstado.appendChild(etiqueta);
+
+                    const celdaAcciones = fila.insertCell();
+                    const grupo = document.createElement('div');
+                    grupo.className = 'botones-fila';
+
+                    const botonDetalle = document.createElement('button');
+                    botonDetalle.type = 'button';
+                    botonDetalle.textContent = 'Ver detalle';
+                    botonDetalle.dataset.detalleId = consulta.id;
+                    grupo.appendChild(botonDetalle);
+
+                    const botonEstado = document.createElement('button');
+                    botonEstado.type = 'button';
+                    botonEstado.className = 'boton-estado';
+                    botonEstado.textContent = leida ? 'Marcar no leída' : 'Marcar leída';
+                    botonEstado.dataset.estadoId = consulta.id;
+                    botonEstado.dataset.estado = leida ? 'no leida' : 'leida';
+                    grupo.appendChild(botonEstado);
+
+                    celdaAcciones.appendChild(grupo);
+                });
+            } catch (error) {
+                console.error('Error al cargar consultas:', error);
+                mensajeEstado.textContent = error.message || 'Error al cargar consultas.';
+            }
+        }
+
+        cuerpoTabla.addEventListener('click', async event => {
+            const botonDetalle = event.target.closest('[data-detalle-id]');
+            const botonEstado = event.target.closest('[data-estado-id]');
+
+            try {
+                if (botonDetalle) {
+                    const respuesta = await fetch(
+                        `/api/consultas/${encodeURIComponent(botonDetalle.dataset.detalleId)}`
+                    );
+
+                    if (respuesta.status === 401) {
+                        window.location.href = '/login.html';
+                        return;
+                    }
+
+                    const consulta = await respuesta.json();
+
+                    if (!respuesta.ok) {
+                        throw new Error(consulta.error || 'No se pudo cargar el detalle.');
+                    }
+
+                    contenidoDetalle.replaceChildren();
+                    agregarCampo('Nombre', consulta.nombre);
+                    agregarCampo('Email', consulta.email);
+                    agregarCampo('Teléfono', consulta.telefono);
+                    agregarCampo('Asunto', consulta.asunto);
+                    agregarCampo(
+                        'Fecha',
+                        consulta.fecha ? new Date(consulta.fecha).toLocaleString() : ''
+                    );
+                    agregarCampo('Mensaje', consulta.mensaje, 'detalle-mensaje');
+                    dialogo.showModal();
+                }
+
+                if (botonEstado) {
+                    botonEstado.disabled = true;
+
+                    const respuesta = await fetch(
+                        `/api/consultas/${encodeURIComponent(botonEstado.dataset.estadoId)}/estado`,
+                        {
+                            method: 'PATCH',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ estado: botonEstado.dataset.estado })
+                        }
+                    );
+
+                    const resultado = await respuesta.json();
+
+                    if (!respuesta.ok) {
+                        throw new Error(resultado.error || 'No se pudo cambiar el estado.');
+                    }
+
+                    await cargarConsultas();
+                }
+            } catch (error) {
+                console.error('Error en acción del panel:', error);
+                mensajeEstado.textContent = error.message || 'No se pudo completar la acción.';
+            }
+        });
+
+        document.getElementById('filtro-estado')
+            .addEventListener('change', cargarConsultas);
+        document.getElementById('filtro-fecha')
+            .addEventListener('change', cargarConsultas);
+
+        let temporizadorBusqueda;
+        document.getElementById('filtro-buscar').addEventListener('input', () => {
+            clearTimeout(temporizadorBusqueda);
+            temporizadorBusqueda = setTimeout(cargarConsultas, 300);
+        });
+
+        document.getElementById('limpiar-filtros').addEventListener('click', () => {
+            document.getElementById('filtro-estado').value = '';
+            document.getElementById('filtro-fecha').value = '';
+            document.getElementById('filtro-buscar').value = '';
+            cargarConsultas();
+        });
+
+        document.getElementById('cerrar-detalle')
+            .addEventListener('click', () => dialogo.close());
+
+        document.getElementById('cerrar-sesion').addEventListener('click', async () => {
+            try {
+                await fetch('/api/logout', { method: 'POST' });
+            } catch (error) {
+                console.error('Error al cerrar sesión:', error);
+            } finally {
+                window.location.href = '/login.html';
+            }
+        });
+
+        cargarConsultas();
+    </script>
+</body>
+</html>

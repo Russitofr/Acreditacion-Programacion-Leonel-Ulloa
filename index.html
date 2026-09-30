@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ULAN - Tu tecnología, siempre en su punto exacto</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@800&family=Oswald:wght@500;700&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <canvas id="tech-canvas"></canvas>
+
+    <nav>
+        <a href="#hero" class="logo-container">
+            <img src="escudo-ulan.png" alt="Escudo ULAN" class="logo-shield">
+            <img src="logo-ulan.png" alt="ULAN" class="logo-text-img">
+        </a>
+        <div class="nav-right-container">
+            <ul class="nav-links">
+                <li><a href="#hero" class="nav-link active">Inicio</a></li>
+                <li><a href="#servicios" class="nav-link">Servicios</a></li>
+                <li><a href="#metodologia" class="nav-link">Metodología</a></li>
+                <li><a href="#quienes-somos" class="nav-link">Quiénes Somos</a></li>
+                <li><a href="#contacto" class="nav-link">Contacto</a></li>
+            </ul>
+            <button id="theme-toggle" class="theme-toggle-btn" aria-label="Cambiar modo claro/oscuro">
+                <i id="theme-icon" class="fas fa-moon"></i>
+            </button>
+        </div>
+    </nav>
+
+    <section id="hero" class="hero">
+        <div class="hero-logo-container blur-fade">
+            <img src="logo-ulan.png" alt="ULAN - Tu tecnología, siempre en su punto exacto" class="hero-logo-img">
+        </div>
+        <div class="slogan-tag blur-fade">"Tu tecnología, siempre en su punto exacto"</div>
+        <p class="blur-fade">Soluciones integrales de hardware, redes y software orientadas a usuarios particulares (estudiantes y hogares) y pequeñas y medianas empresas (PyMEs).</p>
+        <div class="blur-fade">
+            <a href="#contacto" class="btn">Solicitar Asistencia Técnica</a>
+        </div>
+    </section>
+
+    <section id="servicios">
+        <h2 class="section-title blur-fade">Servicios y Capacitación</h2>
+        <p class="section-subtitle blur-fade">Intervenciones técnicas integrales divididas en pilares fundamentales para garantizar la estabilidad y resiliencia de los sistemas.</p>
+
+        <div class="services-grid" id="lista-servicios" aria-live="polite">
+            <p>Cargando servicios...</p>
+        </div>
+    </section>
+
+    <section id="metodologia">
+        <h2 class="section-title blur-fade">Metodología de Asesoramiento Asistido</h2>
+        <div class="info-grid">
+            <div class="info-card reveal-card glow-card">
+                <h3>Enfoque Personalizado</h3>
+                <p>A diferencia de una capacitación masiva, nuestro servicio se adapta específicamente a los conocimientos, el ritmo y el problema real que enfrenta el cliente en su equipo o entorno.</p>
+            </div>
+            <div class="info-card reveal-card glow-card">
+                <h3>Acompañamiento Activo</h3>
+                <p>El técnico no se limita a resolver el problema por el usuario; le enseña, explica y guía paso a paso, transformando la asistencia en una experiencia de aprendizaje directo.</p>
+            </div>
+        </div>
+    </section>
+
+    <div class="mid-shield-section">
+        <a class="shield-badge-container blur-fade" href="/login.html" title="Acceso de administración" aria-label="Acceso de administración">
+            <img src="escudo-ulan.png" alt="Acceso de administración ULAN" class="shield-lg-center">
+        </a>
+    </div>
+
+    <section id="quienes-somos">
+        <h2 class="section-title blur-fade">Quiénes Somos</h2>
+        <p class="section-subtitle blur-fade">Conocé la filosofía que nos guía y al equipo de profesionales que trabaja detrás de la pantalla para mantener tu tecnología siempre en su punto exacto.</p>
+
+        <div class="info-grid" style="margin-bottom: 2rem;">
+            <div class="info-card reveal-card glow-card">
+                <h3>Nuestra Misión</h3>
+                <p>Brindar soluciones tecnológicas integrales de alta calidad en hardware, redes y software, ofreciendo un acompañamiento técnico cercano y personalizado que potencie tanto a usuarios particulares como a PyMEs.</p>
+            </div>
+            <div class="info-card reveal-card glow-card">
+                <h3>Nuestra Visión</h3>
+                <p>Ser la empresa líder en soporte, desarrollo y consultoría tecnológica de la región, reconocida por nuestra excelencia operativa, innovación constante y el compromiso con la educación digital de nuestros clientes.</p>
+            </div>
+        </div>
+
+        <h3 class="section-title blur-fade" style="font-size: 2rem; margin-bottom: 1.5rem; margin-top: 2rem;">Nuestros Valores</h3>
+        <div class="values-grid-cards">
+            <div class="service-card reveal-card glow-card">
+                <h3>Compromiso</h3>
+                <p>Dedicación absoluta para resolver cada desafío técnico con eficacia.</p>
+            </div>
+            <div class="service-card reveal-card glow-card">
+                <h3>Innovación</h3>
+                <p>Adaptación continua a las nuevas herramientas y tendencias del sector.</p>
+            </div>
+            <div class="service-card reveal-card glow-card">
+                <h3>Transparencia</h3>
+                <p>Claridad y honestidad en cada diagnóstico y recomendación al usuario.</p>
+            </div>
+            <div class="service-card reveal-card glow-card">
+                <h3>Educación</h3>
+                <p>Acompañamiento pedagógico para que el cliente comprenda y domine su tecnología.</p>
+            </div>
+        </div>
+
+        <h3 class="section-title blur-fade" style="font-size: 2rem; margin-bottom: 1.5rem;">Nuestro Equipo</h3>
+        <div class="team-grid">
+            <div class="team-card reveal-card glow-card">
+                <h4>Leonel Ulloa</h4>
+                <span class="role">Redes y Capacitaciones Asistidas</span>
+                <p>Responsable de infraestructura, seguridad y acompañamiento técnico al usuario.</p>
+            </div>
+            <div class="team-card reveal-card glow-card">
+                <h4>Alejandro Quevedo</h4>
+                <span class="role">Área de Software</span>
+                <p>Encargado del desarrollo, despliegue y mantenimiento de sistemas y soluciones digitales.</p>
+            </div>
+            <div class="team-card reveal-card glow-card">
+                <h4>Pedro Arregui</h4>
+                <span class="role">Área de Marketing</span>
+                <p>Responsable de la imagen de marca, captación de clientes y estrategias de comunicación.</p>
+            </div>
+            <div class="team-card reveal-card glow-card">
+                <h4>Matias Fernandez</h4>
+                <span class="role">Área de Hardware</span>
+                <p>Especialista en diagnóstico, ensamblaje y soporte técnico físico de equipos.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="contacto">
+        <h2 class="section-title blur-fade">Contáctanos</h2>
+        <p class="section-subtitle blur-fade">Comunícate con ULAN para resolver tus requerimientos tecnológicos.</p>
+
+        <div class="contact-container reveal-card glow-card">
+            <form class="contact-form" id="contactForm">
+                <div class="form-group">
+                    <label for="nombre">Nombre y Apellido</label>
+                    <input type="text" id="nombre" name="nombre" maxlength="100" placeholder="Tu nombre" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Correo Electrónico</label>
+                    <input type="email" id="email" name="email" maxlength="255" placeholder="correo@ejemplo.com" required>
+                </div>
+                <div class="form-group">
+                    <label for="telefono">Teléfono (Opcional)</label>
+                    <input type="tel" id="telefono" name="telefono" maxlength="30" placeholder="Tu teléfono">
+                </div>
+                <div class="form-group">
+                    <label for="asunto">Área de Interés</label>
+                    <select id="asunto" name="asunto" required>
+                        <option value="">Elegí un área</option>
+                        <option value="Hardware">Hardware</option>
+                        <option value="Redes">Redes</option>
+                        <option value="Software">Software</option>
+                        <option value="Capacitación y Tutorías Asistidas">Capacitación y Tutorías Asistidas</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="mensaje">Detalle de la Consulta</label>
+                    <textarea id="mensaje" name="mensaje" rows="4" minlength="10" maxlength="5000" placeholder="Describí tu requerimiento..." required></textarea>
+                </div>
+                <button type="submit" class="btn" style="width: 100%;">Enviar Solicitud</button>
+                <p id="respuesta-formulario" role="status" aria-live="polite"></p>
+            </form>
+        </div>
+    </section>
+
+    <a href="https://wa.me/5492964605797" target="_blank" rel="noopener noreferrer" class="whatsapp-float" id="wa-btn" title="Escribinos por WhatsApp">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/>
+        </svg>
+    </a>
+
+    <footer>
+        <p>&copy; 2026 ULAN. Todos los derechos reservados.</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
